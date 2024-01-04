@@ -1,6 +1,7 @@
 const express = require('express');
 const { Client } = require('@notionhq/client');
 const cors = require('cors');
+const { default: axios } = require('axios');
 require('dotenv').config();
 
 const app = express();
@@ -9,6 +10,8 @@ app.use(express.json());
 const port = process.env.PORT || 3001;
 
 const notion = new Client({ auth: process.env.NOTION_KEY });
+
+// ! Actualizar cors para production
 app.use(cors());
 
 const API_URL = process.env.URL + process.env.PREFIX + process.env.ACCOUNT_ID
@@ -32,6 +35,7 @@ app.post('/notion-stores', async (req, res) => {
     res.status(500).send('Error en la solicitud a Notion');
   }
 });
+
 app.post('/notion-copys', async (req, res) => {
   try {
     const response = await notion.databases.query({
@@ -65,6 +69,7 @@ app.post('/tollfree-info', async (req, res) => {
         "ic%7DS",
         "V~%7BJ"
       ],
+      start_cursor: req.body.start_cursor
     })
     res.json(response);
   } catch {
@@ -75,19 +80,25 @@ app.post('/tollfree-info', async (req, res) => {
 
 app.post('/tollfreeVerification', async (req, res) => {
   try {
-    const response = await fetch(`${API_URL}/tollFreeVerification`, {
-      method: 'post',
-      body: req.body,
-      headers: {
-        'Content-Type': 'application/json'
+    const user = process.env.BW_USER
+    const passwrd = process.env.BW_PASSWORD
+
+    const response = await axios.post(`${API_URL}/tollFreeVerification`, req.body, {
+      auth: {
+        username: user,
+        password: passwrd,
       },
+      headers: {
+        "Content-Type": "application/json"
+      }
     })
-    resJson = await response.json()
+
+    const resJson = await response.data;
 
     res.json(resJson);
-
+    res.status(response.status)
   } catch (err) {
-    res.status(500).send(`Error: ${err}`);
+    res.status(500).json(err.response.data)
   }
 })
 
