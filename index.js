@@ -18,7 +18,6 @@ const API_URL = process.env.URL + process.env.PREFIX + process.env.ACCOUNT_ID
 
 app.post('/notion-stores', async (req, res) => {
   try {
-    console.log(req.method, req.baseUrl, req.body)
     const response = await notion.databases.query({
       database_id: process.env.STORES_DB_ID,
       filter_properties: [
@@ -53,7 +52,6 @@ app.post('/notion-copys', async (req, res) => {
 })
 
 app.post('/tollfree-info', async (req, res) => {
-
   try {
     const response = await notion.databases.query({
       database_id: process.env.STORES_DB_ID,
@@ -94,9 +92,7 @@ app.post('/tollfreeVerification', async (req, res) => {
     })
 
     const resJson = await response.data;
-
-    res.json(resJson);
-    res.status(response.status)
+    res.status(response.status).json(resJson);
   } catch (err) {
     res.status(500).json(err.response.data)
   }
