@@ -2,6 +2,8 @@
 
 Servidor para hacer solicitudes a APIs de terceros en aplicaciones de Sweepstouch de uso interno.
 
+Creado con Node.js y Express.js
+
 Las solicitudes se hacen a los siguientes servicios:
 - Notion
 - Bandwidth
@@ -15,3 +17,4 @@ Para mas detalles sobre como funcionan las integraciones de Notion ver la [docum
 
 Se utiliza la API de Bandwidth para automatizar servicios relacionados con los numeros de telefono tollfree.
 El endpoint principal es para enviar el formulario de verificacion para numeros tollfree.
+Para mas detalles ver la [documentacion](https://dev.bandwidth.com/apis/numbers/#tag/Toll-Free-Verification/operation/requestVerification) oficial.
